@@ -19,6 +19,7 @@
     padding: 20px;              /* 内边距 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
     border: 1px solid #bbdefb;  /* 边框 */
+    margin-left: 20px;          /* 向右移动20px */
 }
 ```
 
