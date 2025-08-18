@@ -17,8 +17,9 @@
     background-color: #e3f2fd;  /* 淡蓝色背景 */
     border-radius: 0;           /* 方形边角 */
     padding: 20px;              /* 内边距 */
-    margin-left: auto;         /* 使用auto让sidebar靠右对齐 */
-    margin-right: 15px;        /* 从右侧边缘向内移动15px，优化视觉位置 */
+    margin-left: 0;
+    margin-right: 0;
+    transform: translateX(15px); /* 向右微调15px，不影响网格布局 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
     border: 1px solid #bbdefb;  /* 边框 */
 }

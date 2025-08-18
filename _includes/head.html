@@ -156,8 +156,9 @@
             border-radius: 0;
             padding: 20px;
             margin-bottom: 20px;
-            margin-left: auto; /* 使用auto让sidebar靠右对齐 */
-            margin-right: 15px; /* 从右侧边缘向内移动15px */
+            margin-left: 0;
+            margin-right: 0;
+            transform: translateX(15px); /* 向右微调15px，不影响网格布局 */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border: 1px solid #bbdefb;
         }
