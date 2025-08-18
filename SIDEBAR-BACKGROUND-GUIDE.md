@@ -14,19 +14,26 @@
 ### 背景样式
 ```css
 .sidebar-container {
-    background-color: #e3f2fd;  /* 淡蓝色背景 */
+    background-color: #1976d2;  /* 深蓝色背景 - 加深30% */
     border-radius: 0;           /* 方形边角 */
     padding: 20px;              /* 内边距 */
+    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
-    border: 1px solid #bbdefb;  /* 边框 */
+    border: 1px solid #1565c0;  /* 边框 */
+    position: relative;
+    margin-right: calc(-100vw + 100% + 15px);  /* 延伸到右边缘 */
+    padding-right: calc(100vw - 100% + 20px);
+    margin-left: 0;
+    border-left: none;
 }
 ```
 
 ### 颜色方案
-- **背景色**: #e3f2fd (淡蓝色)
-- **标题色**: #1565c0 (深蓝色)
-- **链接色**: #1976d2 (蓝色)
-- **悬停色**: #0d47a1 (深海军蓝)
+- **背景色**: #1976d2 (深蓝色 - 加深30%)
+- **标题色**: #ffffff (白色)
+- **链接色**: #ffffff (白色)
+- **悬停色**: rgba(255, 255, 255, 0.8) (半透明白色)
+- **边框色**: #1565c0 (深蓝色)
 
 ## 区块样式
 
@@ -86,10 +93,21 @@
 @media (max-width: 991px) {
     .sidebar-container {
         margin-top: 30px;
-        padding: 15px;  /* 移动端减小内边距 */
+        padding: 15px;
+        margin-right: 0;           /* 移动端恢复内边距 */
+        padding-right: 15px;
+        border-left: 1px solid #1565c0;
     }
 }
 ```
+
+### 加宽背景实现原理
+使用CSS视口单位(vw)和calc()函数实现背景延伸到屏幕边缘：
+- `margin-right: calc(-100vw + 100% + 15px)` - 将右边距设置为负值，延伸到视口边缘
+- `padding-right: calc(100vw - 100% + 20px)` - 调整内边距保持内容对齐
+- `position: relative` - 确保定位上下文正确
+- 移动端自动恢复为正常内边距，避免水平滚动
+- 颜色加深30%：从#e3f2fd变为#1976d2，文字变为白色确保可读性
 
 ## 浏览器兼容性
 
