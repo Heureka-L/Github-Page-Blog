@@ -4,8 +4,8 @@ title: "测试文章背景图"
 subtitle: "验证每篇文章可以单独设置背景图"
 date: 2024-01-01 10:00:00
 author: Heureka
-header-img: img/bk2.png
-bg-img: img/bk1.jpg
+header-img: img/bk2
+bg-img: img/bk1.j
 tags: [测试, 背景图]
 ---
 
