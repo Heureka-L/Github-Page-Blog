@@ -13,7 +13,7 @@
     border-radius: 12px;         /* 12px圆角 */
     padding: 25px;              /* 内边距 */
     margin-bottom: 30px;        /* 文章间距 */
-    background-color: #e3f2fd;  /* 淡蓝色背景 */
+    background-color: rgba(227, 242, 253, 0.7);  /* 30%透明度的淡蓝色背景 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
