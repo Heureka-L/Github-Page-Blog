@@ -150,14 +150,19 @@
             font-weight: 600;
         }
         
-        /* 右侧Sidebar蓝色背景 */
+        /* 右侧Sidebar蓝色背景 - 延伸到屏幕边缘 */
         .sidebar-container {
             background-color: #e3f2fd;
             border-radius: 0;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border: 1px solid #bbdefb;
+            border-left: none;
+            position: relative;
+            margin-right: calc(-50vw + 50%);
+            padding-right: calc(50vw - 50% + 20px);
+            margin-left: 0;
         }
         
         .sidebar-container h5 {
@@ -213,7 +218,19 @@
             .sidebar-container {
                 margin-top: 30px;
                 padding: 15px;
+                margin-right: 0;
+                padding-right: 15px;
+                border-left: 1px solid #bbdefb;
             }
+        }
+        
+        /* 确保背景延伸到边缘的额外处理 */
+        .container {
+            overflow-x: hidden;
+        }
+        
+        body {
+            overflow-x: hidden;
         }
     </style>
 
