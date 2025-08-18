@@ -149,6 +149,72 @@
         .sidebar-container a {
             font-weight: 600;
         }
+        
+        /* 右侧Sidebar蓝色背景 */
+        .sidebar-container {
+            background-color: #e3f2fd;
+            border-radius: 0;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #bbdefb;
+        }
+        
+        .sidebar-container h5 {
+            color: #1565c0 !important;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-container .short-about p {
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-container .tags a,
+        .sidebar-container .tags .tag {
+            background-color: rgba(25, 118, 210, 0.1);
+            border-color: #1976d2;
+            color: #1976d2 !important;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-container .tags a:hover,
+        .sidebar-container .tags .tag:hover {
+            background-color: #1976d2;
+            color: white !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-container .list-inline li a {
+            color: #1565c0;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .sidebar-container .list-inline li a:hover {
+            color: #0d47a1;
+            text-decoration: none;
+        }
+        
+        /* 确保Sidebar背景覆盖整个区域 */
+        .sidebar-container > section {
+            background-color: transparent;
+            margin-bottom: 25px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 991px) {
+            .sidebar-container {
+                margin-top: 30px;
+                padding: 15px;
+            }
+        }
     </style>
 
     <!-- Custom Fonts -->
