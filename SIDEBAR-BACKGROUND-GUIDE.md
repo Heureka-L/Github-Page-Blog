@@ -17,6 +17,7 @@
     background-color: #e3f2fd;  /* 淡蓝色背景 */
     border-radius: 0;           /* 方形边角 */
     padding: 20px;              /* 内边距 */
+    margin-left: 30px;         /* 向右移动30px，优化视觉位置 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
     border: 1px solid #bbdefb;  /* 边框 */
 }
