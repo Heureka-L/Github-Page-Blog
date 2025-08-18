@@ -215,6 +215,84 @@
                 padding: 15px;
             }
         }
+        
+        /* 主页文章圆角虚线边框和背景 */
+        .post-preview {
+            border: 2px dashed #000000;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            background-color: #e3f2fd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .post-preview:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-color: #333333;
+        }
+        
+        .post-preview a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .post-preview .post-title {
+            color: #1565c0;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        .post-preview:hover .post-title {
+            color: #0d47a1;
+        }
+        
+        .post-preview .post-subtitle {
+            color: #1976d2;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .post-preview .post-content-preview {
+            color: #333333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #1976d2;
+        }
+        
+        .post-preview .post-meta {
+            color: #666666;
+            font-size: 0.9em;
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 移除原有的分隔线 */
+        .post-preview + hr {
+            display: none;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .post-preview {
+                padding: 20px;
+                margin-bottom: 20px;
+                border-width: 1px;
+            }
+            
+            .post-preview .post-content-preview {
+                padding: 12px;
+            }
+        }
     </style>
 
     <!-- Custom Fonts -->
