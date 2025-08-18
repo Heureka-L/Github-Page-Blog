@@ -19,11 +19,6 @@
     padding: 20px;              /* 内边距 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
     border: 1px solid #bbdefb;  /* 边框 */
-    border-left: none;          /* 移除左边框 */
-    position: relative;
-    margin-right: calc(-50vw + 50%);  /* 延伸到右边缘 */
-    padding-right: calc(50vw - 50% + 20px);  /* 调整右内边距 */
-    margin-left: 0;
 }
 ```
 
@@ -91,20 +86,10 @@
 @media (max-width: 991px) {
     .sidebar-container {
         margin-top: 30px;
-        padding: 15px;
-        margin-right: 0;           /* 移动端恢复内边距 */
-        padding-right: 15px;
-        border-left: 1px solid #bbdefb;  /* 恢复左边框 */
+        padding: 15px;  /* 移动端减小内边距 */
     }
 }
 ```
-
-### 全宽背景实现原理
-使用CSS视口单位(vw)和calc()函数实现背景延伸到屏幕边缘：
-- `margin-right: calc(-50vw + 50%)` - 将右边距设置为负值，延伸到视口边缘
-- `padding-right: calc(50vw - 50% + 20px)` - 调整内边距保持内容对齐
-- `position: relative` - 确保定位上下文正确
-- 移动端自动恢复为正常内边距，避免水平滚动
 
 ## 浏览器兼容性
 
