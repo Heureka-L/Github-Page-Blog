@@ -1,0 +1,192 @@
+<!-- Daily Quote Sidebar -->
+<div id="daily-quote-container" class="daily-quote-container">
+    <div class="daily-quote-content">
+        <div class="daily-quote-title">每日一言</div>
+        <div id="daily-quote-text" class="daily-quote-text">正在加载...</div>
+        <div id="daily-quote-author" class="daily-quote-author"></div>
+    </div>
+    <button id="daily-quote-toggle" class="daily-quote-toggle" title="显示/隐藏每日一言">❝</button>
+</div>
+
+<style>
+/* 每日一言侧边栏样式 */
+.daily-quote-container {
+    position: fixed;
+    left: 20px;
+    top: 60%;        /* 从50%改为60%，向下移动 */
+    transform: translateY(-50%);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.daily-quote-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 133, 161, 0.1);
+    max-width: 280px;
+    min-width: 200px;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.daily-quote-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0085a1;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 133, 161, 0.2);
+    padding-bottom: 8px;
+}
+
+.daily-quote-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 8px;
+    font-style: italic;
+    text-align: center;
+}
+
+.daily-quote-author {
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+    opacity: 0.8;
+}
+
+.daily-quote-toggle {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #0085a1;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 2px 10px rgba(0, 133, 161, 0.3);
+    transition: all 0.3s ease;
+    margin-left: -18px;
+}
+
+.daily-quote-toggle:hover {
+    background: #006d85;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 隐藏状态 */
+.daily-quote-container.hidden .daily-quote-content {
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.daily-quote-container.hidden .daily-quote-toggle {
+    left: 0;
+    margin-left: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .daily-quote-container {
+        left: 10px;
+        max-width: 250px;
+    }
+    
+    .daily-quote-content {
+        max-width: 220px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .daily-quote-container {
+        left: 5px;
+        bottom: 20px;
+        top: auto;
+        transform: none;
+    }
+    
+    .daily-quote-content {
+        max-width: 200px;
+        padding: 12px;
+    }
+}
+</style>
+
+<script>
+// 每日一言功能
+(function() {
+    'use strict';
+    
+    const quoteText = document.getElementById('daily-quote-text');
+    const quoteAuthor = document.getElementById('daily-quote-author');
+    const toggleBtn = document.getElementById('daily-quote-toggle');
+    const container = document.getElementById('daily-quote-container');
+    
+    // 本地备用名言
+    const backupQuotes = [
+        { content: "生活就像海洋，只有意志坚强的人才能到达彼岸。", author: "马克思" },
+        { content: "天行健，君子以自强不息。", author: "《周易》" },
+        { content: "学而时习之，不亦说乎？", author: "孔子" },
+        { content: "千里之行，始于足下。", author: "老子" },
+        { content: "路漫漫其修远兮，吾将上下而求索。", author: "屈原" },
+        { content: "不积跬步，无以至千里；不积小流，无以成江海。", author: "荀子" },
+        { content: "学而不思则罔，思而不学则殆。", author: "孔子" },
+        { content: "知之者不如好之者，好之者不如乐之者。", author: "孔子" }
+    ];
+    
+    // 显示本地备用名言
+    function showBackupQuote() {
+        const randomIndex = Math.floor(Math.random() * backupQuotes.length);
+        const quote = backupQuotes[randomIndex];
+        quoteText.textContent = quote.content;
+        quoteAuthor.textContent = quote.author ? `—— ${quote.author}` : '';
+    }
+    
+    // 获取每日一言
+    async function fetchDailyQuote() {
+        try {
+            // 直接使用本地名言，避免跨域问题
+            showBackupQuote();
+            
+            // 如果API可用，可以尝试获取
+            // const response = await fetch('https://api.nxvav.cn/api/yiyan/?encode=json&charset=utf-8');
+            // const data = await response.json();
+            // if (data && data.content) {
+            //     quoteText.textContent = data.content;
+            //     quoteAuthor.textContent = data.author ? `—— ${data.author}` : '';
+            // }
+        } catch (error) {
+            console.log('使用本地名言');
+            showBackupQuote();
+        }
+    }
+    
+    // 确保容器可见
+    container.style.display = 'block';
+    container.classList.remove('hidden');
+    
+    // 切换显示/隐藏
+    toggleBtn.addEventListener('click', function() {
+        container.classList.toggle('hidden');
+    });
+    
+    // 页面加载完成后立即显示名言
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchDailyQuote);
+    } else {
+        fetchDailyQuote();
+    }
+    
+    // 每10分钟刷新一次名言
+    setInterval(fetchDailyQuote, 10 * 60 * 1000);
+})();
+</script>
