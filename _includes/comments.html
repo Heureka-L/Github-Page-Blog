@@ -1,0 +1,56 @@
+<!-- GitHub Issues 评论系统 -->
+<div class="comments-section">
+    <h3 class="comments-title">
+        评论区
+        <span class="comments-count" id="comments-count">0</span>
+    </h3>
+    
+    <!-- 评论表单 -->
+    <div class="comment-form-container">
+        <form id="comment-form" class="comment-form">
+            <div class="form-group">
+                <label for="comment-author">用户名 *</label>
+                <input type="text" id="comment-author" name="author" placeholder="请输入您的用户名" required maxlength="50">
+            </div>
+            
+            <div class="form-group">
+                <label for="comment-content">评论内容 *</label>
+                <textarea id="comment-content" name="content" placeholder="请输入您的评论内容..." required maxlength="1000" rows="4"></textarea>
+            </div>
+            
+            <!-- 人机验证 -->
+            <div class="captcha-container">
+                <div class="captcha-question" id="captcha-question">1 + 1 = ?</div>
+                <div class="captcha-input-group">
+                    <input type="number" id="captcha-answer" class="captcha-input" placeholder="答案" required>
+                    <button type="button" id="refresh-captcha" class="refresh-captcha">换一题</button>
+                </div>
+                <div class="captcha-note">请完成简单计算以验证您是人类</div>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="submit-btn">发表评论</button>
+            </div>
+            
+            <div id="comment-error" class="error-message" style="display: none;"></div>
+            <div id="comment-success" class="success-message" style="display: none;"></div>
+        </form>
+    </div>
+    
+    <!-- 评论列表 -->
+    <div id="comments-list" class="comments-list">
+        <div class="loading-comments" style="text-align: center; padding: 20px;">
+            <p>正在加载评论...</p>
+        </div>
+    </div>
+    
+    <div class="comments-note">
+        <small>💡 提示：评论通过GitHub Issues存储，需要审核后显示。</small>
+    </div>
+</div>
+
+<!-- 引入评论系统CSS -->
+<link rel="stylesheet" href="/css/comments.css">
+
+<!-- 引入GitHub Issues评论系统JS -->
+<script src="/js/github-issues-comments.js"></script>
