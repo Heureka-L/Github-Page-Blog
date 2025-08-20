@@ -94,7 +94,7 @@
     flex: 1;
     margin-left: 280px;
     margin-right: 280px;
-    padding: 40px 50px;
+    padding: 40px 80px;
     max-width: 800px;
 }
 
@@ -241,6 +241,7 @@
     .book-content {
         margin-left: 250px;
         margin-right: 220px;
+        padding: 40px 60px;
     }
     
     .book-right-toc {
@@ -278,7 +279,7 @@
     .book-content {
         margin-left: 0;
         margin-right: 0;
-        padding: 20px;
+        padding: 30px;
         order: 1;
     }
     
