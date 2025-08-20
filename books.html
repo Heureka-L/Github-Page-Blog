@@ -7,31 +7,38 @@ title: CONTENT
     <h1>CONTENT</h1>
     
     <div class="books-grid">
-        {% for book in site.data.books.books %}
-        <div class="book-card">
-            <h2>{{ book.name }}</h2>
-            
-            <div class="book-chapters">
-                {% for chapter in book.chapters %}
-                <div class="chapter">
-                    <h3>{{ chapter.name }}</h3>
-                    <ul class="chapter-sections">
-                        {% for section in chapter.sections %}
-                        <li>
-                            <a href="{{ section.url }}">{{ section.name }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endfor %}
+    {% assign books = site.posts | where_exp: "post", "post.book != nil" | group_by: "book.title" | sort: "name" %}
+    
+    {% for book_group in books %}
+    {% assign book_posts = book_group.items | sort: "chapter.order" | sort: "section.order" %}
+    {% assign first_post = book_posts.first %}
+    
+    <div class="book-card">
+        <h2>{{ book_group.name }}</h2>
+        
+        <div class="book-chapters">
+            {% assign chapters = book_posts | group_by: "chapter.title" | sort: "name" %}
+            {% for chapter_group in chapters %}
+            {% assign chapter_posts = chapter_group.items | sort: "section.order" %}
+            <div class="chapter">
+                <h3>{{ chapter_group.name }}</h3>
+                <ul class="chapter-sections">
+                    {% for post in chapter_posts %}
+                    <li>
+                        <a href="{{ post.url }}">{{ post.section.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-            
-            <a href="{% for section in book.chapters.first.sections %}{% if forloop.first %}{{ section.url }}{% endif %}{% endfor %}" class="read-book-btn">
-                开始阅读
-            </a>
+            {% endfor %}
         </div>
-        {% endfor %}
+        
+        <a href="{{ first_post.url }}" class="read-book-btn">
+            开始阅读
+        </a>
     </div>
+    {% endfor %}
+</div>
 </div>
 
 <style>
