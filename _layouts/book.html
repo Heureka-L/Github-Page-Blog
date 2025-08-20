@@ -173,37 +173,64 @@ body {
 <link rel="stylesheet" href="{{ site.baseurl }}/css/book-style.css">
 
 <style>
-/* 整体界面缩放125% */
-.book-layout {
+/* 文章内容区域缩放125%，顶部横幅保持原比例 */
+.book-content,
+.book-sidebar,
+.book-right-toc {
     zoom: 1.25;
     -moz-transform: scale(1.25);
     -moz-transform-origin: top left;
     -ms-zoom: 1.25;
 }
 
+/* 顶部横幅保持原比例 */
+.book-header {
+    zoom: 1;
+    -moz-transform: none;
+    -ms-zoom: 1;
+}
+
 /* 针对不支持zoom的浏览器使用transform */
 @supports not (zoom: 1.25) {
-    .book-layout {
+    .book-content,
+    .book-sidebar,
+    .book-right-toc {
         transform: scale(1.25);
         transform-origin: top left;
-        width: 80%; /* 防止溢出 */
+    }
+    
+    .book-header {
+        transform: none;
     }
 }
 
-/* 响应式缩放调整 */
+/* 响应式缩放调整 - 仅对内容区域 */
 @media (max-width: 768px) {
-    .book-layout {
+    .book-content,
+    .book-sidebar,
+    .book-right-toc {
         zoom: 1.1;
         -moz-transform: scale(1.1);
         -moz-transform-origin: top left;
         -ms-zoom: 1.1;
     }
     
+    .book-header {
+        zoom: 1;
+        -moz-transform: none;
+        -ms-zoom: 1;
+    }
+    
     @supports not (zoom: 1.1) {
-        .book-layout {
+        .book-content,
+        .book-sidebar,
+        .book-right-toc {
             transform: scale(1.1);
             transform-origin: top left;
-            width: 90%;
+        }
+        
+        .book-header {
+            transform: none;
         }
     }
 }
