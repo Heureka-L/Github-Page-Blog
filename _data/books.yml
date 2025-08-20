@@ -13,9 +13,8 @@ books:
     - name: 2.1 STM32定时器标准库配置流程
       slug: 2025-08-18-STM32定时器标准库配置流程
       url: /2025/08/18/STM32定时器标准库配置流程/
-  - name: 第2章：定时器应用
     sections:
-    - name: 2.1 PWM驱动有刷直流电机
+    - name: 2.2 PWM驱动有刷直流电机
       url: /2025/08/20/pwm驱动有刷直流电机/
   name: STM32开发指南
 - chapters:
