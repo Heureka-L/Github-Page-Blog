@@ -375,7 +375,7 @@ tags:
             QMessageBox.critical(self, "错误", f"保存失败：{str(e)}")
 
     def update_books_data_exact(self, article_data):
-        """精确更新books.yml文件"""
+        """精确更新books.yml文件，使用正确的数据结构"""
         books_file = os.path.join("..", "_data", "books.yml")
         
         try:
@@ -433,23 +433,21 @@ tags:
         if section_found is None:
             section_found = {
                 'name': formatted_section,
-                'title': title,
-                'url': article_data['url'],
-                'slug': article_data['slug']
+                'slug': article_data['slug'],
+                'url': article_data['url']
             }
             chapter_found['sections'].append(section_found)
         else:
             # 更新现有小节
-            section_found['title'] = title
-            section_found['url'] = article_data['url']
             section_found['slug'] = article_data['slug']
+            section_found['url'] = article_data['url']
 
         # 写入文件
         with open(books_file, 'w', encoding='utf-8') as f:
             yaml.dump(books_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
     def create_article_file_exact(self, article_data):
-        """创建文章文件，保持精确格式"""
+        """创建文章文件，使用book布局格式"""
         # 生成日期字符串
         date_str = datetime.now().strftime('%Y-%m-%d')
         title_slug = self.generate_slug(article_data['title'])
@@ -461,38 +459,37 @@ tags:
         # slug格式：2025-08-20-pwm（包含完整日期）
         slug = f"{date_str}-{title_slug}"
         
-        # URL路径格式：/2025/08/20/pwm/（不包含重复时间戳）
-        url_path = f"/{date_str.replace('-', '/')}/{title_slug}/"
+        # URL路径格式：/2025/08/20/标题/（使用原始标题）
+        url_path = f"/{date_str.replace('-', '/')}/{article_data['title']}/"
         
-        # 构建YAML front matter
+        # 构建YAML front matter - 使用book布局格式
         content = f"""---
-layout: post
-header-img: img/post-bg-digital-native.jpg
+layout: book
 title: "{article_data['title']}"
-subtitle: "{article_data.get('subtitle', '')}"
-author: "Heureka"
-header-mask: 0.4
-catalog: true
-tags:
-{article_data.get('tags', '')}
-mathjax: true
-description: "{article_data.get('description', '')}"
-date: {date_str}
-slug: {slug}
----
-
-## 1. 简介
-
-## 2. 准备工作
-
-## 3. 实现步骤
-
-## 4. 完整代码
-
-## 5. 测试验证
-
-## 6. 总结
 """
+        
+        if article_data.get('subtitle'):
+            content += f"subtitle: {article_data['subtitle']}"
+            
+        content += f"""date: {date_str} 10:00:00
+author: Heureka
+book: "{article_data['book']}"
+chapter: "{article_data['chapter']}"
+section: "{article_data['section']}"
+tags:
+"""
+        
+        # 处理标签
+        tags = article_data.get('tags', '').strip()
+        if tags:
+            tag_list = [tag.strip() for tag in tags.split(',')]
+            for tag in tag_list:
+                content += f"    - {tag}\n"
+        else:
+            content += "    - General\n"
+            
+        content += "---\n\n"
+        content += article_data.get('content', '')
         
         # 写入文件
         with open(filepath, 'w', encoding='utf-8') as f:
