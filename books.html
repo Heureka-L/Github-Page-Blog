@@ -3,22 +3,34 @@ layout: default
 title: CONTENT
 ---
 
+{% comment %}
+自动收集所有包含书籍信息的文章
+{% endcomment %}
+{% assign books = site.posts | where_exp: "post", "post.book != nil" | group_by: "book" %}
+
 <div class="books-index">
     <h1>CONTENT</h1>
     
     <div class="books-grid">
-        {% for book in site.data.books.books %}
+        {% for book_group in books %}
         <div class="book-card">
-            <h2>{{ book.name }}</h2>
+            <h2>{{ book_group.name }}</h2>
+            
+            {% comment %}
+            按章节分组
+            {% endcomment %}
+            {% assign chapters = book_group.items | group_by: "chapter" %}
             
             <div class="book-chapters">
-                {% for chapter in book.chapters %}
+                {% for chapter_group in chapters %}
                 <div class="chapter">
-                    <h3>{{ chapter.name }}</h3>
+                    <h3>{{ chapter_group.name }}</h3>
                     <ul class="chapter-sections">
-                        {% for section in chapter.sections %}
+                        {% for post in chapter_group.items %}
+                        {% assign section_title = post.section | default: post.title %}
                         <li>
-                            <a href="{{ section.url }}">{{ section.name }}</a>
+                            <a href="{{ post.url | relative_url }}">{{ section_title }}</a>
+                            <small class="post-date">{{ post.date | date: "%Y-%m-%d" }}</small>
                         </li>
                         {% endfor %}
                     </ul>
@@ -26,12 +38,28 @@ title: CONTENT
                 {% endfor %}
             </div>
             
-            <a href="{% for section in book.chapters.first.sections %}{% if forloop.first %}{{ section.url }}{% endif %}{% endfor %}" class="read-book-btn">
+            {% if book_group.items.first %}
+            <a href="{{ book_group.items.first.url | relative_url }}" class="read-book-btn">
                 开始阅读
             </a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
+    
+    {% if books.size == 0 %}
+    <div class="no-books">
+        <p>暂无书籍内容</p>
+        <p>请在文章头部添加书籍信息：</p>
+        <pre><code>---
+layout: book
+title: "文章标题"
+book: "书籍名称"
+chapter: "第1章"
+section: "1.1"
+---</code></pre>
+    </div>
+    {% endif %}
 </div>
 
 <style>
@@ -106,7 +134,10 @@ title: CONTENT
 }
 
 .chapter-sections li {
-    margin: 5px 0;
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .chapter-sections a {
@@ -116,11 +147,18 @@ title: CONTENT
     display: block;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+    flex: 1;
 }
 
 .chapter-sections a:hover {
     background-color: #f8f9fa;
     color: #3498db;
+}
+
+.post-date {
+    color: #bdc3c7;
+    font-size: 12px;
+    margin-left: 10px;
 }
 
 .read-book-btn {
@@ -138,6 +176,21 @@ title: CONTENT
     background: #2980b9;
 }
 
+.no-books {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+}
+
+.no-books pre {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: left;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
 @media (max-width: 768px) {
     .books-grid {
         grid-template-columns: 1fr;
@@ -145,6 +198,16 @@ title: CONTENT
     
     .book-card {
         padding: 20px;
+    }
+    
+    .chapter-sections li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .post-date {
+        margin-left: 10px;
+        margin-top: 5px;
     }
 }
 </style>
