@@ -23,16 +23,16 @@ body {
 .book-header {
     position: fixed;
     top: 0;
-    left: 280px;
+    left: 350px; /* 对齐缩放后书籍目录的右边线 (280px * 1.25 = 350px) */
     right: 0;
-    height: 60px;
+    height: 48px; /* 缩短高度 */
     background: #fff;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
     z-index: 200;
     display: flex;
     align-items: center;
-    padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .book-header-content {
@@ -77,21 +77,21 @@ body {
 
 /* 调整内容区域避免被顶部遮挡 */
 .book-layout {
-    padding-top: 60px;
+    padding-top: 48px; /* 调整为缩短后的横幅高度 */
 }
 
 .book-sidebar {
-    top: 60px;
-    height: calc(100vh - 60px);
+    top: 48px;
+    height: calc(100vh - 48px);
 }
 
 .book-right-toc {
-    top: 60px;
-    height: calc(100vh - 60px);
+    top: 48px;
+    height: calc(100vh - 48px);
 }
 
 .book-content {
-    padding-top: 20px;
+    padding-top: 10px;
 }
 </style>
 
@@ -173,60 +173,38 @@ body {
 <link rel="stylesheet" href="{{ site.baseurl }}/css/book-style.css">
 
 <style>
-/* 仅顶部横幅缩小25% */
-.book-header {
-    height: 45px; /* 原来60px缩小25% */
-    zoom: 0.75;
-    -moz-transform: scale(0.75);
-    -moz-transform-origin: top left;
-    -ms-zoom: 0.75;
-}
-
-/* 调整内容区域避免被缩小的顶部横幅遮挡 */
+/* 整体界面缩放125% */
 .book-layout {
-    padding-top: 45px; /* 匹配缩小后的高度 */
+    zoom: 1.25;
+    -moz-transform: scale(1.25);
+    -moz-transform-origin: top left;
+    -ms-zoom: 1.25;
 }
 
-.book-sidebar {
-    top: 45px;
-    height: calc(100vh - 45px);
-}
-
-.book-right-toc {
-    top: 45px;
-    height: calc(100vh - 45px);
-}
-
-/* 针对不支持zoom的浏览器 */
-@supports not (zoom: 0.75) {
-    .book-header {
-        transform: scale(0.75);
-        transform-origin: top left;
-    }
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .book-header {
-        height: 40px;
-        zoom: 0.85;
-        -moz-transform: scale(0.85);
-        -moz-transform-origin: top left;
-        -ms-zoom: 0.85;
-    }
-    
+/* 针对不支持zoom的浏览器使用transform */
+@supports not (zoom: 1.25) {
     .book-layout {
-        padding-top: 40px;
+        transform: scale(1.25);
+        transform-origin: top left;
+        width: 80%; /* 防止溢出 */
+    }
+}
+
+/* 响应式缩放调整 */
+@media (max-width: 768px) {
+    .book-layout {
+        zoom: 1.1;
+        -moz-transform: scale(1.1);
+        -moz-transform-origin: top left;
+        -ms-zoom: 1.1;
     }
     
-    .book-sidebar {
-        top: 40px;
-        height: calc(100vh - 40px);
-    }
-    
-    .book-right-toc {
-        top: 40px;
-        height: calc(100vh - 40px);
+    @supports not (zoom: 1.1) {
+        .book-layout {
+            transform: scale(1.1);
+            transform-origin: top left;
+            width: 90%;
+        }
     }
 }
 </style>
