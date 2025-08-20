@@ -141,7 +141,7 @@ class BlogManager(QMainWindow):
         self.book_combo.setPlaceholderText("选择或输入书籍名称")
         
         self.chapter_input = QLineEdit()
-        self.chapter_input.setPlaceholderText("例如：第1章")
+        self.chapter_input.setPlaceholderText("例如：第1章：XXX")
         
         self.section_input = QLineEdit()
         self.section_input.setPlaceholderText("例如：1.1")
@@ -157,6 +157,10 @@ class BlogManager(QMainWindow):
         self.tags_input = QLineEdit()
         self.tags_input.setPlaceholderText("标签，用逗号分隔")
         
+        self.description_text = QTextEdit()
+        self.description_text.setMaximumHeight(80)
+        self.description_text.setPlaceholderText("文章描述（可选）")
+        
         self.content_text = QTextEdit()
         self.content_text.setPlaceholderText("文章内容（支持Markdown格式）")
         
@@ -167,6 +171,7 @@ class BlogManager(QMainWindow):
         form_layout.addRow("副标题：", self.subtitle_input)
         form_layout.addRow("日期：", self.date_edit)
         form_layout.addRow("标签：", self.tags_input)
+        form_layout.addRow("描述：", self.description_text)
         form_layout.addRow("内容：", self.content_text)
         
         form_group.setLayout(form_layout)
@@ -311,191 +316,190 @@ tags:
         }
         
     def save_article(self):
-        """保存文章 - 完美匹配现有格式"""
-        article_data = self.get_article_data()
-        if not article_data:
-            return
-            
+        """保存文章"""
         try:
-            # 生成标准格式的小节名称
-            chapter_num = self.extract_chapter_number(article_data['chapter'])
-            section_num = 1  # 默认小节编号
+            book = self.book_combo.currentText().strip()
+            chapter = self.chapter_input.text().strip()
+            section = self.section_input.text().strip()
+            title = self.title_input.text().strip()
+            tags = self.tags_input.text().strip()
+            description = self.description_text.toPlainText().strip()
+            content = self.content_text.toPlainText().strip()
+
+            if not all([book, chapter, section, title]):
+                QMessageBox.warning(self, "警告", "请填写完整的书籍、章节、小节和标题信息！")
+                return
+
+            # 生成日期字符串
+            date_str = datetime.now().strftime("%Y-%m-%d")
             
-            # 根据章节和小节生成标准格式
-            formatted_section = f"{chapter_num}.{section_num} {article_data['title']}"
+            # 生成标题slug
+            title_slug = re.sub(r'[^\w\s-]', '', title.lower())
+            title_slug = re.sub(r'[-\s]+', '-', title_slug).strip('-')
             
-            # 更新书籍数据
-            self.update_books_data_exact(article_data, formatted_section)
+            # 生成完整slug
+            full_slug = f"{date_str}-{title_slug}"
+            
+            # 生成文件名
+            filename = f"{full_slug}.md"
+            
+            # 生成URL路径
+            url_path = f"/{date_str.replace('-', '/')}/{title_slug}/"
+            
+            # 生成章节和小节的格式化字符串
+            formatted_section = f"{section} {title}"
+
+            article_data = {
+                'book': book,
+                'chapter': chapter,
+                'section': section,
+                'title': title,
+                'slug': full_slug,
+                'url': url_path,
+                'tags': tags,
+                'description': description,
+                'content': content,
+                'date': date_str,
+                'filename': filename
+            }
+
+            # 更新books.yml
+            self.update_books_data_exact(article_data)
             
             # 创建文章文件
-            self.create_article_file_exact(article_data, formatted_section)
+            self.create_article_file_exact(article_data)
             
-            QMessageBox.information(self, "成功", 
-                                  f"文章已创建并更新书籍数据！\n"
-                                  f"书籍：{article_data['book']}\n"
-                                  f"章节：{article_data['chapter']}\n"
-                                  f"小节：{formatted_section}")
-            self.clear_form()
-            self.refresh_data()
+            QMessageBox.information(self, "成功", "文章保存成功！")
             
         except Exception as e:
-            QMessageBox.critical(self, "错误", f"保存失败: {str(e)}")
-            
-    def extract_chapter_number(self, chapter_name):
-        """提取章节数字"""
-        match = re.search(r'第(\d+)章', chapter_name)
-        return int(match.group(1)) if match else 1
+            QMessageBox.critical(self, "错误", f"保存失败：{str(e)}")
+
+    def update_books_data_exact(self, article_data):
+        """精确更新books.yml文件"""
+        books_file = os.path.join("..", "_data", "books.yml")
         
-    def generate_slug(self, title):
-        """生成URL友好的slug"""
-        # 简单的拼音转换映射
-        pinyin_map = {
-            'STM32': 'STM32', 'GPIO': 'GPIO', 'ADC': 'ADC', 'UART': 'UART',
-            '定时器': 'timer', '配置': 'configuration', '详解': 'detailed',
-            '标准库': 'standard-library', '外设': 'peripheral',
-            '中断': 'interrupt', '输入': 'input', '输出': 'output',
-            '模式': 'mode', '流程': 'process', '原理': 'principle',
-            '二进制': 'binary', '浮点数': 'floating-point', '表示': 'representation'
-        }
+        try:
+            # 读取现有数据
+            with open(books_file, 'r', encoding='utf-8') as f:
+                books_data = yaml.safe_load(f) or {'books': []}
+        except FileNotFoundError:
+            books_data = {'books': []}
+        except yaml.YAMLError:
+            books_data = {'books': []}
+
+        book = article_data['book']
+        chapter = article_data['chapter']
+        section = article_data['section']
+        title = article_data['title']
         
-        slug = title.lower()
-        for chinese, pinyin in pinyin_map.items():
-            slug = slug.replace(chinese.lower(), pinyin)
-        
-        # 处理剩余字符
-        slug = re.sub(r'[^a-zA-Z0-9\-]', '-', slug)
-        slug = re.sub(r'-+', '-', slug).strip('-')
-        return slug
-        
-    def update_books_data_exact(self, article_data, formatted_section):
-        """精确更新books.yml - 严格匹配现有格式"""
-        book_name = article_data['book']
-        chapter_name = article_data['chapter']
-        section_name = article_data['title']
-        
-        # 生成URL友好的slug
-        slug = self.generate_slug(section_name)
-        date_path = article_data['date'].strftime('%Y/%m/%d')
-        url_path = f"/{date_path}/{slug}/"
-        
+        # 生成章节和小节的格式化字符串
+        formatted_section = f"{section} {title}"
+
         # 查找或创建书籍
-        book_found = False
-        for book in self.books_data['books']:
-            if book['name'] == book_name:
-                book_found = True
-                
-                # 查找或创建章节
-                chapter_found = False
-                for chapter in book.get('chapters', []):
-                    if chapter['name'] == chapter_name:
-                        chapter_found = True
-                        
-                        # 确保sections存在
-                        if 'sections' not in chapter:
-                            chapter['sections'] = []
-                            
-                        # 检查是否已存在相同小节
-                        section_exists = False
-                        for section in chapter['sections']:
-                            if section['name'] == formatted_section:
-                                section_exists = True
-                                # 更新URL和slug
-                                section['slug'] = slug
-                                section['url'] = url_path
-                                break
-                        
-                        if not section_exists:
-                            # 添加新小节 - 完全匹配现有格式
-                            section_data = {
-                                'name': formatted_section,
-                                'slug': slug,
-                                'url': url_path
-                            }
-                            chapter['sections'].append(section_data)
-                        break
-                
-                if not chapter_found:
-                    # 创建新章节 - 完全匹配现有格式
-                    new_chapter = {
-                        'name': chapter_name,
-                        'sections': [{
-                            'name': formatted_section,
-                            'slug': slug,
-                            'url': url_path
-                        }]
-                    }
-                    if 'chapters' not in book:
-                        book['chapters'] = []
-                    book['chapters'].append(new_chapter)
+        book_found = None
+        for b in books_data['books']:
+            if b['name'] == book:
+                book_found = b
                 break
         
-        if not book_found:
-            # 创建新书籍 - 完全匹配现有格式
-            new_book = {
-                'name': book_name,
-                'chapters': [{
-                    'name': chapter_name,
-                    'sections': [{
-                        'name': formatted_section,
-                        'slug': slug,
-                        'url': url_path
-                    }]
-                }]
+        if book_found is None:
+            book_found = {
+                'name': book,
+                'chapters': []
             }
-            if 'books' not in self.books_data:
-                self.books_data['books'] = []
-            self.books_data['books'].append(new_book)
-            
-        # 写回文件 - 保持YAML格式一致
-        with open(self.books_file, 'w', encoding='utf-8') as f:
-            yaml.dump(self.books_data, f, allow_unicode=True, 
-                     default_flow_style=False, sort_keys=False)
-            
-    def create_article_file_exact(self, article_data, formatted_section):
-        """创建文章文件 - 完美匹配现有格式"""
-        date_str = article_data['date'].strftime('%Y-%m-%d')
+            books_data['books'].append(book_found)
+
+        # 查找或创建章节
+        chapter_found = None
+        for c in book_found['chapters']:
+            if c['name'] == chapter:
+                chapter_found = c
+                break
+        
+        if chapter_found is None:
+            chapter_found = {
+                'name': chapter,
+                'sections': []
+            }
+            book_found['chapters'].append(chapter_found)
+
+        # 查找或更新小节
+        section_found = None
+        for s in chapter_found['sections']:
+            if s['name'] == formatted_section:
+                section_found = s
+                break
+        
+        if section_found is None:
+            section_found = {
+                'name': formatted_section,
+                'title': title,
+                'url': article_data['url'],
+                'slug': article_data['slug']
+            }
+            chapter_found['sections'].append(section_found)
+        else:
+            # 更新现有小节
+            section_found['title'] = title
+            section_found['url'] = article_data['url']
+            section_found['slug'] = article_data['slug']
+
+        # 写入文件
+        with open(books_file, 'w', encoding='utf-8') as f:
+            yaml.dump(books_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+
+    def create_article_file_exact(self, article_data):
+        """创建文章文件，保持精确格式"""
+        # 生成日期字符串
+        date_str = datetime.now().strftime('%Y-%m-%d')
         title_slug = self.generate_slug(article_data['title'])
+        
+        # 文件名格式：2025-08-17-STM32-GPIO-configuration.md
         filename = f"{date_str}-{title_slug}.md"
-        filepath = os.path.join(self.posts_dir, filename)
+        filepath = os.path.join('..', '_posts', filename)
         
-        # 生成章节信息
-        chapter_match = re.search(r'第(\d+)章', article_data['chapter'])
-        chapter_num = chapter_match.group(1) if chapter_match else "1"
+        # slug格式：2025-08-20-pwm（包含完整日期）
+        slug = f"{date_str}-{title_slug}"
         
-        # 生成标准YAML前置数据
-        yaml_header = f"""---
-layout: book
-title: "{article_data['title']}"""
+        # URL路径格式：/2025/08/20/pwm/（不包含重复时间戳）
+        url_path = f"/{date_str.replace('-', '/')}/{title_slug}/"
         
-        if article_data['subtitle']:
-            yaml_header += f'\nsubtitle: "{article_data["subtitle"]}"'
-            
-        yaml_header += f"""
-date: {article_data['date'].strftime('%Y-%m-%d %H:%M:%S')}
-author: Heureka
-book: "{article_data['book']}"
-chapter: "第{chapter_num}章"
-section: "{formatted_section}"
-tags: 
-{chr(10).join([f'    - {tag.strip()}' for tag in article_data['tags'].split(',')]) if article_data['tags'] != 'General' else '    - 未分类'}
+        # 构建YAML front matter
+        content = f"""---
+layout: post
+header-img: img/post-bg-digital-native.jpg
+title: "{article_data['title']}"
+subtitle: "{article_data.get('subtitle', '')}"
+author: "Heureka"
+header-mask: 0.4
+catalog: true
+tags:
+{article_data.get('tags', '')}
+mathjax: true
+description: "{article_data.get('description', '')}"
+date: {date_str}
+slug: {slug}
 ---
 
-## {article_data['title']}
+## 1. 简介
 
-### 1. 简介
+## 2. 准备工作
 
-### 2. 实现步骤
+## 3. 实现步骤
 
-### 3. 代码示例
+## 4. 完整代码
 
-### 4. 注意事项
+## 5. 测试验证
 
-### 5. 扩展应用
+## 6. 总结
 """
         
+        # 写入文件
         with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(yaml_header)
-            
+            f.write(content)
+        
+        return filepath
+
     def clear_form(self):
         """清空表单"""
         self.title_input.clear()
@@ -533,6 +537,13 @@ tags:
         chapter_num = self.chapter_spin.value()
         section_num = self.section_spin.value()
         self.section_input.setText(f"{chapter_num}.{section_num}")
+
+    def generate_slug(self, text):
+        """生成URL友好的slug"""
+        # 转换为小写，移除非字母数字字符，替换空格为连字符
+        slug = re.sub(r'[^\w\s-]', '', text.lower())
+        slug = re.sub(r'[-\s]+', '-', slug).strip('-')
+        return slug
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

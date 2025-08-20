@@ -13,9 +13,10 @@ books:
     - name: 2.1 STM32定时器标准库配置流程
       slug: 2025-08-18-STM32定时器标准库配置流程
       url: /2025/08/18/STM32定时器标准库配置流程/
-    - name: 2.1 PWM控制电机
-      slug: pwm
-      url: /2025/08/20/pwm/
+    - name: 2.2 PWM控制电机
+      title: PWM控制电机
+      url: /2025/08/20/pwm控制电机/
+      slug: 2025-08-20-pwm控制电机
   name: STM32开发指南
 - chapters:
   - name: 第1章：数字基础
