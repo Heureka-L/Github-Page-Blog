@@ -92,9 +92,9 @@
 /* 中间内容区 */
 .book-content {
     flex: 1;
-    margin-left: 280px;
-    margin-right: 280px;
-    padding: 40px 100px;
+    margin-left: 200px;
+    margin-right: 150px;
+    padding: 40px 30px;
     max-width: none;
 }
 
@@ -235,18 +235,18 @@
 /* 响应式设计 */
 @media (max-width: 1200px) {
     .book-sidebar {
-        width: 250px;
+        width: 220px;
     }
     
     .book-content {
-        margin-left: 250px;
-        margin-right: 220px;
-        padding: 40px 80px;
+        margin-left: 220px;
+        margin-right: 160px;
+        padding: 40px 40px;
         max-width: none;
     }
     
     .book-right-toc {
-        width: 220px;
+        width: 160px;
     }
 }
 
