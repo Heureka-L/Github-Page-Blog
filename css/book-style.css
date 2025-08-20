@@ -94,8 +94,8 @@
     flex: 1;
     margin-left: 280px;
     margin-right: 280px;
-    padding: 40px 80px;
-    max-width: 800px;
+    padding: 40px 100px;
+    max-width: none;
 }
 
 .book-article {
@@ -241,7 +241,8 @@
     .book-content {
         margin-left: 250px;
         margin-right: 220px;
-        padding: 40px 60px;
+        padding: 40px 80px;
+        max-width: none;
     }
     
     .book-right-toc {
@@ -257,6 +258,8 @@
     .book-content {
         margin-left: 220px;
         margin-right: 0;
+        padding: 40px 60px;
+        max-width: none;
     }
     
     .book-right-toc {
@@ -279,7 +282,8 @@
     .book-content {
         margin-left: 0;
         margin-right: 0;
-        padding: 30px;
+        padding: 40px;
+        max-width: none;
         order: 1;
     }
     
