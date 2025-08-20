@@ -182,6 +182,24 @@
     border-left: 4px solid #3498db;
 }
 
+/* 图片显示优化 */
+.book-article-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 确保图片在小屏幕上也能正常显示 */
+@media (max-width: 768px) {
+    .book-article-body img {
+        max-width: 100%;
+        margin: 15px 0;
+    }
+}
+
 /* 右侧目录 */
 .book-right-toc {
     width: 280px;
