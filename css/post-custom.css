@@ -1,0 +1,51 @@
+/* 文章阅读界面专用样式 - 去除sidebar背景色 */
+
+/* 文章页侧边栏去除背景色 */
+.post-container ~ .sidebar-container {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* 文章页目录容器去除背景色 */
+.post-container ~ .catalog-container {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* 确保只在文章页生效 */
+.post-container .sidebar-container h5,
+.post-container .sidebar-container .short-about p {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 15px !important;
+}
+
+/* 恢复原有字体颜色 */
+.post-container .sidebar-container,
+.post-container .sidebar-container a {
+    color: #bfbfbf !important;
+}
+
+.post-container .sidebar-container h5 {
+    color: #a3a3a3 !important;
+    border-bottom: 1px solid #eee !important;
+    padding-bottom: 1em !important;
+}
+
+/* 标签样式恢复 */
+.post-container .sidebar-container .tags a {
+    background-color: transparent !important;
+    border-color: #bfbfbf !important;
+    color: #bfbfbf !important;
+}
+
+.post-container .sidebar-container .tags a:hover {
+    color: #0085a1 !important;
+    border-color: #0085a1 !important;
+    background-color: transparent !important;
+}

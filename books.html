@@ -1,0 +1,150 @@
+---
+layout: default
+title: CONTENT
+---
+
+<div class="books-index">
+    <h1>CONTENT</h1>
+    
+    <div class="books-grid">
+        {% for book in site.data.books.books %}
+        <div class="book-card">
+            <h2>{{ book.name }}</h2>
+            
+            <div class="book-chapters">
+                {% for chapter in book.chapters %}
+                <div class="chapter">
+                    <h3>{{ chapter.name }}</h3>
+                    <ul class="chapter-sections">
+                        {% for section in chapter.sections %}
+                        <li>
+                            <a href="{{ section.url }}">{{ section.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <a href="{% for section in book.chapters.first.sections %}{% if forloop.first %}{{ section.url }}{% endif %}{% endfor %}" class="read-book-btn">
+                开始阅读
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+/* 仅在books页面时顶部导航栏变为黑色 */
+.navbar-custom {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav li a {
+    color: #e0e0e0 !important;
+}
+
+.navbar-custom .nav li a:hover {
+    color: #3498db !important;
+}
+
+.books-index {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.books-index h1 {
+    text-align: center;
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 50px;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 40px;
+}
+
+.book-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    transition: transform 0.3s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-card h2 {
+    color: #3498db;
+    font-size: 24px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.chapter {
+    margin-bottom: 20px;
+}
+
+.chapter h3 {
+    color: #2c3e50;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.chapter-sections {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chapter-sections li {
+    margin: 5px 0;
+}
+
+.chapter-sections a {
+    color: #7f8c8d;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.chapter-sections a:hover {
+    background-color: #f8f9fa;
+    color: #3498db;
+}
+
+.read-book-btn {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 25px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.read-book-btn:hover {
+    background: #2980b9;
+}
+
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .book-card {
+        padding: 20px;
+    }
+}
+</style>

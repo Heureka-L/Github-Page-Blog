@@ -136,6 +136,16 @@ layout: default
 {% endif %}
 
 
+<!-- 文章页专用样式 -->
+<link rel="stylesheet" href="{{ "/css/post-custom.css" | prepend: site.baseurl }}">
+
+<!-- 隐藏文章页的每日一言 -->
+<style>
+.daily-quote-container {
+    display: none !important;
+}
+</style>
+
 {% if site.anchorjs %}
 <!-- async load function -->
 <script>

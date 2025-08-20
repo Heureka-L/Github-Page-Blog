@@ -1,0 +1,318 @@
+---
+layout: default
+---
+
+<style>
+/* 隐藏默认导航栏 */
+.navbar-custom {
+    display: none !important;
+}
+
+/* 调整body避免顶部空白 */
+body {
+    padding-top: 0 !important;
+}
+
+/* 隐藏搜索和每日一言 */
+.search-page,
+.daily-quote-container {
+    display: none !important;
+}
+
+/* 顶部功能区域 */
+.book-header {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    height: 60px;
+    background: #fff;
+    border-bottom: 2px solid #e9ecef;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.book-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: calc(1360px - 280px);
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.book-nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.book-nav-btn {
+    padding: 6px 12px;
+    border: 1px dashed #bdc3c7;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: #7f8c8d;
+    font-weight: 700;
+}
+
+.book-nav-btn:hover {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+/* CONTENT按钮样式 */
+.content-btn {
+    /* 使用与HOME和FOLLOW ME相同的样式 */
+}
+
+/* 调整内容区域避免被顶部遮挡 */
+.book-layout {
+    padding-top: 60px;
+}
+
+.book-sidebar {
+    top: 60px;
+    height: calc(100vh - 60px);
+}
+
+.book-right-toc {
+    top: 60px;
+    height: calc(100vh - 60px);
+}
+
+.book-content {
+    padding-top: 20px;
+}
+</style>
+
+<!-- 顶部功能区域 -->
+<header class="book-header">
+    <div class="book-header-content">
+        <div class="book-nav">
+            <a href="{{ site.baseurl }}/" class="book-nav-btn">HOME</a>
+            <a href="https://github.com/Heureka-L/" class="book-nav-btn" target="_blank">FOLLOW ME</a>
+            <a href="{{ site.baseurl }}/books/" class="book-nav-btn content-btn">CONTENT</a>
+        </div>
+    </div>
+</header>
+
+<!-- 书籍式布局 -->
+<div class="book-layout">
+    <!-- 左侧导航 -->
+    <aside class="book-sidebar">
+        <div class="book-title">
+            {{ page.book }}
+        </div>
+        <hr class="book-divider">
+        <nav class="book-toc">
+            {% assign current_book = nil %}
+            {% for book in site.data.books.books %}
+                {% if book.name == page.book %}
+                    {% assign current_book = book %}
+                    {% for chapter in book.chapters %}
+                        <div class="chapter">
+                            <h3 class="chapter-title">{{ chapter.name }}</h3>
+                            <ul class="chapter-sections">
+                                {% for section in chapter.sections %}
+                                    {% assign section_slug = section.slug | slugify %}
+                                    {% assign current_slug = page.slug | slugify %}
+                                    <li class="section {% if section.slug == page.slug %}current{% endif %}">
+                                        <a href="{{ section.url }}">
+                                            {{ section.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </nav>
+    </aside>
+
+    <!-- 中间内容区 -->
+    <main class="book-content">
+        <article class="book-article">
+            <header class="book-article-header">
+                <h1 class="book-article-title">{{ page.title }}</h1>
+                {% if page.subtitle %}
+                    <p class="book-article-subtitle">{{ page.subtitle }}</p>
+                {% endif %}
+                <div class="book-article-meta">
+                    <span class="book-chapter">{{ page.chapter }}</span>
+                    <span class="book-section">{{ page.section }}</span>
+                </div>
+            </header>
+            
+            <div class="book-article-body">
+                {{ content }}
+            </div>
+        </article>
+    </main>
+
+    <!-- 右侧目录 -->
+    <aside class="book-right-toc">
+        <h4>文章目录</h4>
+        <div class="article-toc">
+            <nav id="toc"></nav>
+        </div>
+    </aside>
+</div>
+
+<!-- 书籍样式 -->
+<link rel="stylesheet" href="{{ site.baseurl }}/css/book-style.css">
+
+<script>
+// 书籍导航功能和文章目录生成
+document.addEventListener('DOMContentLoaded', function() {
+    // 生成文章目录
+    generateTOC();
+    
+    // 平滑滚动到锚点
+    document.querySelectorAll('.book-toc a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = this.getAttribute('href');
+            if (target) {
+                window.location.href = target;
+            }
+        });
+    });
+});
+
+function generateTOC() {
+    const tocContainer = document.getElementById('toc');
+    if (!tocContainer) return;
+    
+    const headings = document.querySelectorAll('.book-article-body h1, .book-article-body h2, .book-article-body h3, .book-article-body h4');
+    
+    if (headings.length === 0) {
+        tocContainer.innerHTML = '<p style="color: #7f8c8d; font-size: 14px;">暂无目录</p>';
+        return;
+    }
+    
+    const tocList = document.createElement('ul');
+    tocList.style.listStyle = 'none';
+    tocList.style.padding = '0';
+    tocList.style.margin = '0';
+    
+    const tocLinks = [];
+    
+    headings.forEach((heading, index) => {
+        const id = heading.id || `toc-${index}`;
+        heading.id = id;
+        
+        const level = parseInt(heading.tagName.charAt(1));
+        const indent = (level - 1) * 15;
+        
+        const listItem = document.createElement('li');
+        listItem.style.margin = '8px 0';
+        listItem.style.paddingLeft = `${indent}px`;
+        
+        const link = document.createElement('a');
+        link.href = `#${id}`;
+        link.textContent = heading.textContent;
+        link.style.color = '#7f8c8d';
+        link.style.textDecoration = 'none';
+        link.style.fontSize = '13px';
+        link.style.display = 'block';
+        link.style.padding = '5px 8px';
+        link.style.borderRadius = '4px';
+        link.style.transition = 'all 0.3s ease';
+        link.style.borderLeft = '2px solid transparent';
+        
+        link.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#ecf0f1';
+            this.style.color = '#3498db';
+            this.style.borderLeftColor = '#3498db';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.backgroundColor = 'transparent';
+                this.style.color = '#7f8c8d';
+                this.style.borderLeftColor = 'transparent';
+            }
+        });
+        
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.getElementById(id);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setActiveLink(this);
+            }
+        });
+        
+        tocLinks.push({ link, element: heading });
+        
+        listItem.appendChild(link);
+        tocList.appendChild(listItem);
+    });
+    
+    tocContainer.appendChild(tocList);
+    
+    // 设置当前活动链接
+    function setActiveLink(activeLink) {
+        tocLinks.forEach(item => {
+            item.link.classList.remove('active');
+            item.link.style.backgroundColor = 'transparent';
+            item.link.style.color = '#7f8c8d';
+            item.link.style.borderLeftColor = 'transparent';
+        });
+        
+        activeLink.classList.add('active');
+        activeLink.style.backgroundColor = '#3498db';
+        activeLink.style.color = 'white';
+        activeLink.style.borderLeftColor = '#2980b9';
+    }
+    
+    // 滚动时更新当前活动链接
+    function updateActiveLinkOnScroll() {
+        let currentActive = null;
+        
+        for (let i = tocLinks.length - 1; i >= 0; i--) {
+            const item = tocLinks[i];
+            const rect = item.element.getBoundingClientRect();
+            
+            if (rect.top <= 100) {
+                currentActive = item.link;
+                break;
+            }
+        }
+        
+        if (currentActive) {
+            setActiveLink(currentActive);
+        }
+    }
+    
+    // 监听滚动事件
+    window.addEventListener('scroll', updateActiveLinkOnScroll);
+    
+    // 初始设置
+    updateActiveLinkOnScroll();
+}
+</script>
+
+<script>
+// 搜索功能（已简化，直接使用主页搜索）
+function initBookSearch() {
+    // 搜索功能已移至独立的搜索页面
+    // 点击Search按钮直接跳转到搜索页面
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initBookSearch();
+});
+</script>

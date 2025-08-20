@@ -47,11 +47,12 @@ if(navigator.serviceWorker){
     
     if(data.command == "UPDATE_FOUND"){
       console.log("UPDATE_FOUND_BY_SW", data);
-      createSnackbar({
-        message: "Content updated.",
-        actionText:"refresh",
-        action: function(e){location.reload()}
-      })
+      // 禁用更新提示，只在控制台记录
+      // createSnackbar({
+      //   message: "Content updated.",
+      //   actionText:"refresh",
+      //   action: function(e){location.reload()}
+      // })
     }
   }
 }

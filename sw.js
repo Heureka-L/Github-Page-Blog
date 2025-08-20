@@ -258,10 +258,12 @@ function revalidateContent(cachedResp, fetchedResp) {
       const fetchedVer = fetched.headers.get('last-modified')
       console.log(`"${cachedVer}" vs. "${fetchedVer}"`);
       if (cachedVer !== fetchedVer) {
-        sendMessageToClientsAsync({
-          'command': 'UPDATE_FOUND',
-          'url': fetched.url
-        })
+        // 禁用更新通知，只在控制台记录
+        console.log('Content updated but notification disabled:', fetched.url)
+        // sendMessageToClientsAsync({
+        //   'command': 'UPDATE_FOUND',
+        //   'url': fetched.url
+        // })
       }
     })
     .catch(err => console.log(err))
