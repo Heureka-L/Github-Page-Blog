@@ -94,7 +94,7 @@
     flex: 1;
     margin-left: 280px;
     margin-right: 280px;
-    padding: 40px 15px;
+    padding: 40px 0 40px 15px;
     max-width: none;
 }
 
@@ -241,7 +241,7 @@
     .book-content {
         margin-left: 250px;
         margin-right: 250px;
-        padding: 40px 0;
+        padding: 40px 0 40px 15px;
         max-width: none;
     }
     
