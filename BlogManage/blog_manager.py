@@ -540,9 +540,13 @@ slug: {slug}
 
     def generate_slug(self, text):
         """生成URL友好的slug"""
+        import urllib.parse
         # 转换为小写，移除非字母数字字符，替换空格为连字符
         slug = re.sub(r'[^\w\s-]', '', text.lower())
         slug = re.sub(r'[-\s]+', '-', slug).strip('-')
+        # 如果slug为空（纯中文情况），使用原始文本的URL编码
+        if not slug:
+            slug = urllib.parse.quote(text)
         return slug
 
 if __name__ == '__main__':
