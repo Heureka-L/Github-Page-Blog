@@ -173,65 +173,60 @@ body {
 <link rel="stylesheet" href="{{ site.baseurl }}/css/book-style.css">
 
 <style>
-/* 文章内容区域缩放125%，顶部横幅保持原比例 */
-.book-content,
-.book-sidebar,
-.book-right-toc {
-    zoom: 1.25;
-    -moz-transform: scale(1.25);
-    -moz-transform-origin: top left;
-    -ms-zoom: 1.25;
-}
-
-/* 顶部横幅保持原比例 */
+/* 仅顶部横幅缩小25% */
 .book-header {
-    zoom: 1;
-    -moz-transform: none;
-    -ms-zoom: 1;
+    height: 45px; /* 原来60px缩小25% */
+    zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: top left;
+    -ms-zoom: 0.75;
 }
 
-/* 针对不支持zoom的浏览器使用transform */
-@supports not (zoom: 1.25) {
-    .book-content,
-    .book-sidebar,
-    .book-right-toc {
-        transform: scale(1.25);
+/* 调整内容区域避免被缩小的顶部横幅遮挡 */
+.book-layout {
+    padding-top: 45px; /* 匹配缩小后的高度 */
+}
+
+.book-sidebar {
+    top: 45px;
+    height: calc(100vh - 45px);
+}
+
+.book-right-toc {
+    top: 45px;
+    height: calc(100vh - 45px);
+}
+
+/* 针对不支持zoom的浏览器 */
+@supports not (zoom: 0.75) {
+    .book-header {
+        transform: scale(0.75);
         transform-origin: top left;
     }
-    
-    .book-header {
-        transform: none;
-    }
 }
 
-/* 响应式缩放调整 - 仅对内容区域 */
+/* 响应式调整 */
 @media (max-width: 768px) {
-    .book-content,
-    .book-sidebar,
-    .book-right-toc {
-        zoom: 1.1;
-        -moz-transform: scale(1.1);
-        -moz-transform-origin: top left;
-        -ms-zoom: 1.1;
-    }
-    
     .book-header {
-        zoom: 1;
-        -moz-transform: none;
-        -ms-zoom: 1;
+        height: 40px;
+        zoom: 0.85;
+        -moz-transform: scale(0.85);
+        -moz-transform-origin: top left;
+        -ms-zoom: 0.85;
     }
     
-    @supports not (zoom: 1.1) {
-        .book-content,
-        .book-sidebar,
-        .book-right-toc {
-            transform: scale(1.1);
-            transform-origin: top left;
-        }
-        
-        .book-header {
-            transform: none;
-        }
+    .book-layout {
+        padding-top: 40px;
+    }
+    
+    .book-sidebar {
+        top: 40px;
+        height: calc(100vh - 40px);
+    }
+    
+    .book-right-toc {
+        top: 40px;
+        height: calc(100vh - 40px);
     }
 }
 </style>
