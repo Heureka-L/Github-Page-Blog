@@ -1,6 +1,6 @@
 # <center>Githun Page Blog<certer>
 
-#### 项目原地址：https://github.com/Huxpro/huxpro.github.i
+#### 项目原地址：https://github.com/Huxpro/huxpro.github.io
 
 ### 更改网页配置信息：
 ####   1、_config.ym
